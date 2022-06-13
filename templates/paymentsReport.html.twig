@@ -19,7 +19,14 @@
                 <td>
                     <div>{{ invoice.first_name }} {{ invoice.last_name }}</div>
                     {% if invoice.balance > 0 %}
-                        <div><button class="send-reminder-button">Send reminder email</button></div>
+                        <div>
+                            <button
+                                    data-contact-id="{{ invoice.contact_id }}"
+                                    class="send-reminder-button"
+                            >
+                                Send reminder email
+                            </button>
+                        </div>
                     {% endif %}
                 </td>
                 <td>{{ invoice.issued_at | date('Y-m-d') }}</td>
@@ -51,4 +58,32 @@
         {% endfor %}
         </tbody>
     </table>
+{% endblock %}
+
+{% block footer_javascripts %}
+    <script>
+		const reminderCallback = (json) => {
+			const temp = JSON.parse(json)
+			if (temp['isSuccess']) {
+				window.showAlert("Success!", "success")
+            } else {
+				window.showAlert(temp['errorMessage'], "danger");
+            }
+		};
+
+		const clickedReminderButton = (ev) => {
+			const contactId = $(ev.target).data('contact-id');
+			if (!contactId) {
+				alert('Could not find a contact id');
+				return;
+			}
+			$.post('/mail/sendReminder', {
+				contactId,
+			}, reminderCallback);
+		};
+
+		$(document).ready(function() {
+			$('.send-reminder-button').on('click', clickedReminderButton);
+		});
+    </script>
 {% endblock %}
