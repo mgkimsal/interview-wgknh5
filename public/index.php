@@ -24,5 +24,6 @@ $app->addErrorMiddleware(displayErrorDetails: true, logErrors: true, logErrorDet
 // define routes and handlers
 $app->get('/', [Controller::class, 'home']);
 $app->get('/reports/payments', [Controller::class, 'paymentsReport']);
+$app->post('/mail/sendReminder', [Controller::class, 'sendReminder']);
 
 $app->run();
