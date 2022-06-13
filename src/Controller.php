@@ -28,8 +28,12 @@ class Controller
         $invoiceResult = $this->repository->allInvoices();
         $invoices = [];
 
+        // to make faster, let's do one query to grab all invoice payments, and group them by invoice id?
+        $paymentsById = $this->repository->allInvoicePaymentsByInvoiceId();
+
         while ($invoice = $invoiceResult->fetch_assoc()) {
-            $invoice['payments'] = $this->repository->invoicePayments($invoice['invoice_id'])->fetch_all(MYSQLI_ASSOC);
+            // if we have no payments for this invoice_id, just return an empty array
+            $invoice['payments'] = $paymentsById[$invoice['invoice_id']] ?? [];
             $invoices[] = $invoice;
         }
 
