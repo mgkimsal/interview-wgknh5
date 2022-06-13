@@ -54,10 +54,20 @@ th, td {
     text-align: right;
 }
 
-.invoices-table thead tr, .payments-row {
+.invoices-table thead tr {
     border-bottom: 2px solid #aaa;
 }
 
 .send-reminder-button {
     margin: 0.2em 0;
 }
+
+/*
+override the containing invoices-table tr
+by placing this lower in the declaring file
+!important option after also worked.
+*/
+.payments-table thead tr  {
+    border-bottom: 1px solid #ccc;
+}
+
