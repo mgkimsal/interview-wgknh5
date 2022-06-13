@@ -8,14 +8,18 @@ class Repository
 
     public function allInvoices(): \mysqli_result
     {
+
         return $this->db->query(<<<SQL
             SELECT i.*, c.first_name, c.last_name,
-            (SELECT SUM(amount) FROM payments p WHERE i.invoice_id = p.invoice_id) AS amount_paid,
-            total - (SELECT SUM(amount) FROM payments p WHERE i.invoice_id = p.invoice_id) AS balance
+            temptable.total_payments AS amount_paid,
+            total - temptable.total_payments AS balance
             FROM invoices i
+            left join
+                (SELECT p.invoice_id, SUM(amount) as total_payments 
+                 FROM payments p group by p.invoice_id) temptable
+                on temptable.invoice_id=i.invoice_id
             NATURAL JOIN contacts c
             ORDER BY i.issued_at
-LIMIT 100  -- FIXME we need to be able to run this query without any LIMIT
 SQL
         );
     }
