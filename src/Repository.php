@@ -31,6 +31,23 @@ SQL
         );
     }
 
+    public function allInvoicePaymentsByInvoiceId(): array
+    {
+        $rows = $this->db->query(
+            "SELECT * FROM payments ORDER BY paid_at ASC"
+        );
+        $paymentsById = [];
+        while($r = $rows->fetch_assoc()) {
+            if(!array_key_exists($r['invoice_id'], $paymentsById)) {
+                $paymentsById[$r['invoice_id']] = [];
+            }
+            $paymentsById[$r['invoice_id']][] = $r;
+        }
+
+        return $paymentsById;
+    }
+
+
     public function contactDetails(int $contactId): ?array
     {
         return $this->db->query(
