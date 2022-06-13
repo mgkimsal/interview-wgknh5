@@ -69,6 +69,12 @@ CREATE TABLE `payments` (
   `paid_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`payment_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- indexes for report query
+create index contact_id on invoices (invoice_id);
+create index invoice_id on payments (invoice_id);
+-- missing - contact relation to payment - no indication of which party made the payment?
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
