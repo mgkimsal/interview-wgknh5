@@ -44,4 +44,20 @@ class Controller
         $response->getBody()->write($content);
         return $response;
     }
+
+    public function sendReminder(Request $request, Response $response): Response
+    {
+        $body = $request->getParsedBody();
+        $contactId = $body['contactId'] ?? null;
+
+        $contact = $this->repository->contactDetails($contactId);
+        $mailer = new Mailer();
+        $result = $mailer->send([$contact['email']], "Reminder subject", "Reminder!");
+
+        $resultEncoded = json_encode($result);
+        $response->getBody()->write($resultEncoded);
+
+        return $response;
+    }
+
 }
